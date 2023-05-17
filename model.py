@@ -38,5 +38,9 @@ class encoder(nn.Module):
         return softmax, l4
 
     def loss(self, ):
+        pass
         #TODO
 
+    def predict(self):
+        pass
+        #TODO
