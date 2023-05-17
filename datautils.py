@@ -26,7 +26,9 @@ def load_PAMAP2(fold, axis, label_embedding_Locations='home/ranak/ameya_ritvik/m
     train_labels = np.load(train_labels_file)
     test = np.load(test_file)
     test_labels = np.load(test_labels_file)
-
+    #TODO
+    # train_embeddings =
+    # test_embeddings =
     mean = np.nanmean(train)
     std = np.nanstd(train)
     train = (train - mean) / std

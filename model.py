@@ -17,6 +17,7 @@ class encoder(nn.Module):
         self.h1_h2_fc = self.fc_layer(h1_dims, h2_dims)
         self.h2_h3_fc = self.fc_layer(h2_dims, h3_dims)
         self.h4_fc = self.fc_layer(h1_dims + h2_dims + h3_dims, h4_dims)
+        #TODO chage to dot product
         self.similarity = nn.CosineSimilarity()
 
 
@@ -27,14 +28,15 @@ class encoder(nn.Module):
             nn.BatchNorm1d(out_dims)
         )
 
-    def forward(self, x, y):
+    def forward(self, x, y, e):
         l1 = self.input_h1_fc(x)
         l2 = self.h1_h2_fc(l1)
         l3 = self.h2_h3_fc(l2)
         l4 = self.h4_fc(torch.cat((l1, l2, l3), dim=1))
-        sc = self.similarity(l4, self.embeddings[y])
-        return sc, l4
+        sc = self.similarity(l4, e)
+        #softmax
+        return softmax, l4
 
     def loss(self, ):
-
+        #TODO
 
