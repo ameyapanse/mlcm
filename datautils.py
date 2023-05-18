@@ -10,11 +10,9 @@ from scipy.io.arff import loadarff
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
-def load_PAMAP2(fold, axis, label_embedding_Locations='home/ranak/ameya_ritvik/mlcm/PAMAP2_label_embeddings.npy'):
-    embeddings = np.load(label_embedding_Locations)
-    if not fold:
-        loc = 'datasets/PAMAP2'
-    else:
+def load_PAMAP2(fold=None, axis=None, loc='datasets/PAMAP2'):
+    embeddings = np.load(loc+'/'+'label_embeddings.npy')
+    if fold:
         loc = 'datasets/PAMAP2/' + fold
     if axis:
         loc += '/' + str(axis)
@@ -26,13 +24,12 @@ def load_PAMAP2(fold, axis, label_embedding_Locations='home/ranak/ameya_ritvik/m
     train_labels = np.load(train_labels_file)
     test = np.load(test_file)
     test_labels = np.load(test_labels_file)
-    #TODO
-    # train_embeddings =
-    # test_embeddings =
+
+
     mean = np.nanmean(train)
     std = np.nanstd(train)
     train = (train - mean) / std
     test = (test - mean) / std
 
-    print(train.shape, train_labels.shape, test.shape, test_labels.shape)
+    print(train.shape, train_labels.shape, test.shape, test_labels.shape, embeddings.shape)
     return train, train_labels, test, test_labels, embeddings
