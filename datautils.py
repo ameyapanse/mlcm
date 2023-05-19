@@ -10,12 +10,11 @@ from scipy.io.arff import loadarff
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
-def load_PAMAP2(fold=None, axis=None, loc='datasets/PAMAP2'):
+def load_PAMAP2(fold=None, axis=0, loc='datasets/PAMAP2'):
     embeddings = np.load(loc+'/'+'label_embeddings.npy')
     if fold:
         loc = 'datasets/PAMAP2/' + fold
-    if axis:
-        loc += '/' + str(axis)
+
     train_file = os.path.join(loc, "X_train.npy")
     train_labels_file = os.path.join(loc, "y_train.npy")
     test_file = os.path.join(loc, "X_test.npy")
@@ -25,6 +24,9 @@ def load_PAMAP2(fold=None, axis=None, loc='datasets/PAMAP2'):
     test = np.load(test_file)
     test_labels = np.load(test_labels_file)
 
+    if axis is not None:
+        train = train[:, :, axis]
+        test = test[:, :, axis]
 
     mean = np.nanmean(train)
     std = np.nanstd(train)
