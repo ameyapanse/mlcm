@@ -2,6 +2,7 @@ import argparse
 import datetime
 import os
 import time
+import torch
 
 from model import encoder
 
@@ -28,12 +29,12 @@ if __name__ == '__main__':
                         help='The folder name used to save model, output and evaluation metrics. This can be set to any word')
     parser.add_argument('--gpu', type=int, default=0,
                         help='The gpu no. used for training and inference (defaults to 0)')
-    parser.add_argument('--batch-size', type=int, default=8, help='The batch size (defaults to 8)')
+    parser.add_argument('--batch-size', type=int, default=100, help='The batch size (defaults to 8)')
     parser.add_argument('--lr', type=float, default=0.001, help='The learning rate (defaults to 0.001)')
-    parser.add_argument('-h1_dims', type=int, default=100, help='The size of first layer')
-    parser.add_argument('-h2_dims', type=int, default=100, help='The size of second layer')
-    parser.add_argument('-h3_dims', type=int, default=100, help='The size of third layer')
-    parser.add_argument('-h4_dims', type=int, default=100, help='The size of embedding layer.Should match the size of label embeddings')
+    parser.add_argument('-h1_dims', type=int, default=300, help='The size of first layer')
+    parser.add_argument('-h2_dims', type=int, default=150, help='The size of second layer')
+    parser.add_argument('-h3_dims', type=int, default=150, help='The size of third layer')
+    parser.add_argument('-h4_dims', type=int, default=768, help='The size of embedding layer.Should match the size of label embeddings')
     parser.add_argument('--max-train-length', type=int, default=3000,
                         help='For sequence with a length greater than <max_train_length>, it would be cropped into some sequences, each of which has a length less than <max_train_length> (defaults to 3000)')
     parser.add_argument('--iters', type=int, default=None, help='The number of iterations')
@@ -53,7 +54,7 @@ if __name__ == '__main__':
 
     print('Loading data... ', end='')
     if args.dataset == 'PAMAP2':
-        train_data, train_labels, test_data, test_labels, embeddings = datautils.load_PAMAP2()
+        train_data, train_labels, train_embeddings, test_data, test_labels, test_embeddings, label_embeddings = datautils.load_PAMAP2()
     else:
         raise ValueError(f"Unknown loader {args.loader}.")
     print('done')
@@ -62,11 +63,11 @@ if __name__ == '__main__':
         batch_size=args.batch_size,
         lr=args.lr,
         input_dims=train_data.shape[-1],
-        h1_dims=args.h1_dims,
-        h2_dims=args.h2_dims,
-        h3_dims=args.h3_dims,
-        h4_dims=args.h4_dims,
-        label_embeddings=embeddings,
+        # h1_dims=args.h1_dims,
+        # h2_dims=args.h2_dims,
+        # h3_dims=args.h3_dims,
+        # h4_dims=args.h4_dims,
+        label_embeddings=label_embeddings,
         max_train_length=args.max_train_length
     )
 
@@ -80,18 +81,20 @@ if __name__ == '__main__':
     t = time.time()
 
     model = encoder(
-        device=device,
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu"),
         **config
     )
-    model.to(device)
+    # model.to(cuda)
     loss_log = model.fit(
         train_data,
+        train_labels,
+        train_embeddings,
         n_epochs=args.epochs,
         n_iters=args.iters,
         verbose=True
     )
 
-    model.save(f'{run_dir}/model.pkl')
+    # model.save(f'{run_dir}/model.pkl')
 
     t = time.time() - t
     print(f"\nTraining time: {datetime.timedelta(seconds=t)}\n")
