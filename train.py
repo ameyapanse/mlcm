@@ -39,7 +39,7 @@ parser.add_argument('-h4_dims', type=int, default=768, help='The size of embeddi
 parser.add_argument('--max-train-length', type=int, default=3000,
                     help='For sequence with a length greater than <max_train_length>, it would be cropped into some sequences, each of which has a length less than <max_train_length> (defaults to 3000)')
 parser.add_argument('--iters', type=int, default=None, help='The number of iterations')
-parser.add_argument('--epochs', type=int, default=None, help='The number of epochs')
+parser.add_argument('--epochs', type=int, default=30, help='The number of epochs')
 parser.add_argument('--save-every', type=int, default=None,
                     help='Save the checkpoint every <save_every> iterations/epochs')
 parser.add_argument('--seed', type=int, default=None, help='The random seed')

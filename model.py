@@ -35,7 +35,7 @@ class encoder(nn.Module):
         self.lr = lr
         self.max_train_length = max_train_length
         self.n_iters = 0
-        self.n_epochs = 100
+        self.n_epochs = 0
         # print("DEBUG: 36", max_train_length, self.max_train_length)
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
