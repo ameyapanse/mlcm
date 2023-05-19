@@ -66,7 +66,7 @@ if __name__ == '__main__':
         h2_dims=args.h2_dims,
         h3_dims=args.h3_dims,
         h4_dims=args.h4_dims,
-        embeddings=embeddings,
+        label_embeddings=embeddings,
         max_train_length=args.max_train_length
     )
 

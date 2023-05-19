@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
 def load_PAMAP2(fold=None, axis=0, loc='datasets/PAMAP2'):
-    embeddings = np.load(loc+'/'+'label_embeddings.npy')
+    label_embeddings = np.load(loc+'/'+'label_embeddings.npy')
     if fold:
         loc = 'datasets/PAMAP2/' + fold
 
@@ -33,5 +33,15 @@ def load_PAMAP2(fold=None, axis=0, loc='datasets/PAMAP2'):
     train = (train - mean) / std
     test = (test - mean) / std
 
-    print(train.shape, train_labels.shape, test.shape, test_labels.shape, embeddings.shape)
-    return train, train_labels, test, test_labels, embeddings
+    train_embeddings = get_embeddings_per_datapoint(train_labels, label_embeddings)
+    test_embeddings = get_embeddings_per_datapoint(test_labels, label_embeddings)
+
+    print(train.shape, train_labels.shape, train_embeddings.shape,
+          test.shape, test_labels.shape, test_embeddings.shape, label_embeddings.shape)
+    return train, train_labels, train_embeddings, test, test_labels, test_embeddings, label_embeddings
+
+def get_embeddings_per_datapoint(y, label_embeddings):
+    embeddings = np.zeros((y.shape[0], label_embeddings.shape[1]))
+    for i in range(y.shape[0]):
+        embeddings[i] = np.copy(label_embeddings[y[i]])
+    return embeddings

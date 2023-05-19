@@ -8,7 +8,7 @@ from utils import take_per_row, split_with_nan, centerize_vary_length_series, to
 
 class encoder(nn.Module):
     def __init__(self,
-                 embeddings,
+                 label_embeddings,
                  input_dims,
                  h1_dims=300,
                  h2_dims=300,
@@ -24,17 +24,19 @@ class encoder(nn.Module):
         self.h2_dims = h2_dims
         self.h3_dims = h3_dims
         self.h4_dims = h4_dims
-        self.embeddings = embeddings
+        self.label_embeddings = label_embeddings
         self.input_h1_fc = self.fc_layer(input_dims, h1_dims)
         self.h1_h2_fc = self.fc_layer(h1_dims, h2_dims)
         self.h2_h3_fc = self.fc_layer(h2_dims, h3_dims)
         self.h4_fc = self.fc_layer(h1_dims + h2_dims + h3_dims, h4_dims)
         self.similarity = torch.dot
-        self.softmax = torch.nn.Softmax
+        self.softmax = torch.nn.Softmax()
         self.batch_size = batch_size
         self.lr = lr
         self.max_train_length = max_train_length,
         self.device = device
+        self.mse_loss = nn.MSELoss()
+        self.ce_loss = nn.CrossEntropyLoss()
 
     def fc_layer(self, in_dims, out_dims):
         return nn.Sequential(
@@ -52,17 +54,16 @@ class encoder(nn.Module):
         logits = self.softmax(sc)
         return logits, l4
 
-    def loss(self, l4, sc, e):
-        loss1 = nn.MSELoss(l4, e)
-        # We'll have to use one hot encodings for calculating Cross Entropy loss
-        loss2 = nn.CrossEntropyLoss()
-        return loss1(l4, e)  # + add CE loss
-
     def predict(self):
         pass
         # TODO
 
-    def fit(self, train_data, train_labels, train_embeddings , n_epochs=None, n_iters=None, verbose=False):
+    def loss(self, logits, l4, y, e):
+        mse = self.mse_loss(l4, e)
+        ce = self.ce_loss(logits, nn.functional.one_hot(y))
+        return mse + ce
+
+    def fit(self, train_data, train_labels, train_embeddings, n_epochs=None, n_iters=None, verbose=False):
         '''
         Training the model.
         returns loss: a list containing the training losses on each epoch.
@@ -82,7 +83,9 @@ class encoder(nn.Module):
 
         train_data = train_data[~np.isnan(train_data).all(axis=2).all(axis=1)]
 
-        train_dataset = TensorDataset(torch.from_numpy(train_data).to(torch.float))
+        train_dataset = TensorDataset(torch.from_numpy(train_data).to(torch.float),
+                                      torch.from_numpy(train_labels).to(torch.float),
+                                      torch.from_numpy(train_embeddings).to(torch.float))
         train_loader = DataLoader(train_dataset, batch_size=min(self.batch_size, len(train_dataset)), shuffle=True,
                                   drop_last=True)
 
@@ -97,29 +100,18 @@ class encoder(nn.Module):
             n_epoch_iters = 0
 
             interrupted = False
-            for batch in train_loader:
+            for batch_x, batch_y, batch_e in train_loader:
                 if n_iters is not None and self.n_iters >= n_iters:
                     interrupted = True
                     break
 
-                x = batch[0]
                 optimizer.zero_grad()
-                logits, l4 =
-                out1 = self._net(take_per_row(x, crop_offset + crop_eleft, crop_right - crop_eleft))
-                out1 = out1[:, -crop_l:]
+                logits, l4 = self.forward(batch_x, batch_y)
 
-                out2 = self._net(take_per_row(x, crop_offset + crop_left, crop_eright - crop_left))
-                out2 = out2[:, :crop_l]
-
-                loss = hierarchical_contrastive_loss(
-                    out1,
-                    out2,
-                    temporal_unit=self.temporal_unit
-                )
+                loss = self.loss(logits, l4, batch_y, batch_e)
 
                 loss.backward()
                 optimizer.step()
-                self.net.update_parameters(self._net)
 
                 cum_loss += loss.item()
                 n_epoch_iters += 1
