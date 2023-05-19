@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
     print('Loading data... ', end='')
     if args.dataset == 'PAMAP2':
-        train_data, train_labels, test_data, test_labels, embeddings = datautils.load_PAMAP2()
+        train_data, train_labels, train_embeddings, test_data, test_labels, test_embeddings, embeddings = datautils.load_PAMAP2()
     else:
         raise ValueError(f"Unknown loader {args.loader}.")
     print('done')
@@ -86,6 +86,8 @@ if __name__ == '__main__':
     model.to(device)
     loss_log = model.fit(
         train_data,
+        train_labels,
+        train_embeddings,
         n_epochs=args.epochs,
         n_iters=args.iters,
         verbose=True
