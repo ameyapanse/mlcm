@@ -25,9 +25,9 @@ def save_checkpoint_callback(
 
 # if __name__ == '__main__':
 parser = argparse.ArgumentParser()
-parser.add_argument('dataset', default="PAMAP2" , help='The dataset name')
-parser.add_argument('run_name', default='default_run',
-                    help='The folder name used to save model, output and evaluation metrics. This can be set to any word')
+#parser.add_argument('dataset', default="PAMAP2" , help='The dataset name')
+#parser.add_argument('run_name', default='default_run',
+#                    help='The folder name used to save model, output and evaluation metrics. This can be set to any word')
 parser.add_argument('--gpu', type=int, default=0,
                     help='The gpu no. used for training and inference (defaults to 0)')
 parser.add_argument('--batch-size', type=int, default=100, help='The batch size (defaults to 8)')
@@ -48,7 +48,8 @@ parser.add_argument('--max-threads', type=int, default=None,
 parser.add_argument('--eval', action="store_true", help='Whether to perform evaluation after training')
 
 args = parser.parse_args()
-
+args.dataset = 'PAMAP2'
+args.run_name = 'default'
 print("Dataset:", args.dataset)
 print("Arguments:", str(args))
 
