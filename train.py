@@ -8,6 +8,7 @@ from model import encoder
 
 import datautils
 from utils import init_dl_program, name_with_datetime
+import numpy as np
 
 
 def save_checkpoint_callback(
@@ -99,4 +100,14 @@ loss_log = model.fit(
 
 t = time.time() - t
 print(f"\nTraining time: {datetime.timedelta(seconds=t)}\n")
+
+if args.eval :
+    preds = np.array(model.predict(train_data))
+    correct = np.sum(preds == train_labels)
+    print('Train Accuracy : ', correct / preds.shape[0])
+
+    preds = np.array(model.predict(test_data))
+    correct = np.sum(preds == test_labels)
+    print('Test Accuracy : ', correct/preds.shape[0])
+
 print("Finished.")

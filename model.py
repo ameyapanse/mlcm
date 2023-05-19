@@ -64,7 +64,10 @@ class encoder(nn.Module):
         return logits, l4
 
     def predict(self, x):
-        logits, l4 = self.forward(x)
+        x_tensor = torch.from_numpy(x).to(torch.float)
+        logits, l4 = self.forward(x_tensor)
+        return torch.argmax(logits, axis=1)
+
 
 
     def loss(self, logits, l4, y, e):
