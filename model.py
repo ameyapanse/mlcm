@@ -50,7 +50,7 @@ class encoder(nn.Module):
             nn.BatchNorm1d(out_dims)
         )
 
-    def forward(self, x, y):
+    def forward(self, x):
         l1 = self.input_h1_fc(x)
         l2 = self.h1_h2_fc(l1)
         l3 = self.h2_h3_fc(l2)
@@ -63,9 +63,9 @@ class encoder(nn.Module):
         # print("Debug 59: ", logits, logits.shape)
         return logits, l4
 
-    def predict(self):
-        pass
-        # TODO
+    def predict(self, x):
+        logits, l4 = self.forward(x)
+
 
     def loss(self, logits, l4, y, e):
         # print(y.shape, y)
@@ -120,7 +120,7 @@ class encoder(nn.Module):
                     break
 
                 optimizer.zero_grad()
-                logits, l4 = self.forward(batch_x, batch_y)
+                logits, l4 = self.forward(batch_x)
 
                 loss = self.loss(logits, l4, batch_y, batch_e)
 
