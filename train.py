@@ -50,6 +50,7 @@ parser.add_argument('--eval', action="store_true", help='Whether to perform eval
 args = parser.parse_args()
 args.dataset = 'PAMAP2'
 args.run_name = 'default'
+args.eval=True
 print("Dataset:", args.dataset)
 print("Arguments:", str(args))
 
