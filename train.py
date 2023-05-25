@@ -27,7 +27,7 @@ def save_checkpoint_callback(
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', default="PAMAP2" , help='The dataset name')
-    parser.add_argument('--run_name', default='default_run',
+    parser.add_argument('--run-name', default='default_run',
                         help='The folder name used to save model, output and evaluation metrics. This can be set to any word')
     parser.add_argument('--objective', default='gzsl', help='Data Folder')
     parser.add_argument('--fold', default=0, type=int,help='Data Fold')
@@ -36,10 +36,10 @@ if __name__ == '__main__':
                         help='The gpu no. used for training and inference (defaults to 0)')
     parser.add_argument('--batch-size', type=int, default=100, help='The batch size (defaults to 8)')
     parser.add_argument('--lr', type=float, default=0.001, help='The learning rate (defaults to 0.001)')
-    parser.add_argument('-h1_dims', type=int, default=300, help='The size of first layer')
-    parser.add_argument('-h2_dims', type=int, default=150, help='The size of second layer')
-    parser.add_argument('-h3_dims', type=int, default=150, help='The size of third layer')
-    parser.add_argument('-h4_dims', type=int, default=768, help='The size of embedding layer.Should match the size of label embeddings')
+    parser.add_argument('-h1-dims', type=int, default=300, help='The size of first layer')
+    parser.add_argument('-h2-dims', type=int, default=150, help='The size of second layer')
+    parser.add_argument('-h3-dims', type=int, default=150, help='The size of third layer')
+    parser.add_argument('-h4-dims', type=int, default=768, help='The size of embedding layer.Should match the size of label embeddings')
     parser.add_argument('--max-train-length', type=int, default=3000,
                         help='For sequence with a length greater than <max_train_length>, it would be cropped into some sequences, each of which has a length less than <max_train_length> (defaults to 3000)')
     parser.add_argument('--iters', type=int, default=None, help='The number of iterations')
