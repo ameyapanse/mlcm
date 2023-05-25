@@ -27,6 +27,8 @@ def load_PAMAP2(fold=None, axis=0, loc='datasets/PAMAP2'):
     if axis is not None:
         train = train[:, :, axis]
         test = test[:, :, axis]
+    train = train.reshape(train.shape[0], -1)
+    test = test.reshape(test.shape[0], -1)
 
     mean = np.nanmean(train)
     std = np.nanstd(train)
