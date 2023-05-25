@@ -52,9 +52,9 @@ if __name__ == '__main__':
     parser.add_argument('--eval', action="store_true", help='Whether to perform evaluation after training')
 
     args = parser.parse_args()
-    args.dataset = 'PAMAP2'
-    args.run_name = 'default'
-    args.eval=True
+    # args.dataset = 'PAMAP2'
+    # args.run_name = 'default'
+    # args.eval=True
     print("Dataset:", args.dataset)
     print("Arguments:", str(args))
 
