@@ -9,6 +9,6 @@ for obj in gzsl zsl
 do
   for fld in 1 2 3
     do
-      python3 train.py --objective $obj --fold $fld --run_name  --eval
+      python3 train.py --objective $obj --fold $fld --run_name $1 --eval
     done
 done
