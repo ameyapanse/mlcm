@@ -133,7 +133,7 @@ if __name__ == '__main__':
         with open(f'{run_dir}/results.pkl', 'wb') as handle:
             pickle.dump(results, handle, protocol=pickle.HIGHEST_PROTOCOL)
         res_str = json.dumps(results, indent=1)
-        with open('{run_dir}/results.txt', 'w') as file:
+        with open(f'{run_dir}/results.txt', 'w') as file:
             file.write(res_str)
 
 
