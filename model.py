@@ -96,7 +96,7 @@ class encoder(nn.Module):
         # print("Debug 84: ", temporal_missing)
         # if temporal_missing[0] or temporal_missing[-1]:
         #     train_data = centerize_vary_length_series(train_data)
-        # print("Debug 87: ", train_data.shape, train_labels.shape, train_embeddings.shape)
+        print("Debug 87: ", train_data.shape, train_labels.shape, train_embeddings.shape)
         train_data = train_data[~np.isnan(train_data).all(axis=1)]
 
         train_dataset = TensorDataset(torch.from_numpy(train_data).to(torch.float),
