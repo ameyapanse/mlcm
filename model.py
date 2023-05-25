@@ -86,11 +86,11 @@ class encoder(nn.Module):
         if n_iters is None and n_epochs is None:
             n_iters = 200 if train_data.size <= 100000 else 1000  # default param for n_iters
 
-        if self.max_train_length is not None:
-            # print("Debug 76: ", self.max_train_length, train_data.shape[1], train_data.shape)
-            sections = train_data.shape[1] // self.max_train_length
-            if sections >= 2:
-                train_data = np.concatenate(split_with_nan(train_data, sections, axis=1), axis=0)
+        # if self.max_train_length is not None:
+        #     # print("Debug 76: ", self.max_train_length, train_data.shape[1], train_data.shape)
+        #     sections = train_data.shape[1] // self.max_train_length
+        #     if sections >= 2:
+        #         train_data = np.concatenate(split_with_nan(train_data, sections, axis=1), axis=0)
 
         # temporal_missing = np.isnan(train_data).all(axis=-1).any(axis=0)
         # print("Debug 84: ", temporal_missing)
