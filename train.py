@@ -6,7 +6,7 @@ import torch
 
 from model import encoder
 import pickle
-
+import json
 import datautils
 from utils import init_dl_program, name_with_datetime
 import numpy as np
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     if not fold_path:
         fold_path='/fold0'
-    run_dir = 'training/' + args.dataset + '__' + name_with_datetime(args.run_name) + fold_path
+    run_dir = 'training/' + args.run_name + '_' + args.dataset + '/' + fold_path
     os.makedirs(run_dir, exist_ok=True)
 
     t = time.time()
@@ -126,11 +126,16 @@ if __name__ == '__main__':
         print('Test Accuracy : ', test_acc)
 
         results = dict()
+        results['arguments'] = args
         results['loss'] = loss_log
         results['train_acc']= train_acc
         results['test_acc'] = test_acc
         with open(f'{run_dir}/results.pkl', 'wb') as handle:
             pickle.dump(results, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        res_str = json.dumps(results, indent=1)
+        with open('{run_dir}/results.txt', 'w') as file:
+            file.write(res_str)
+
 
 
     print("Finished.")
