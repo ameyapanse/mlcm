@@ -29,7 +29,7 @@ if __name__ == '__main__':
     parser.add_argument('--run_name', default='default_run',
                         help='The folder name used to save model, output and evaluation metrics. This can be set to any word')
     parser.add_argument('--objective', default='gzsl', help='Data Folder')
-    parser.add_argument('--fold', default=1, type=int,help='Data Fold')
+    parser.add_argument('--fold', default=0, type=int,help='Data Fold')
     parser.add_argument('--axis', default=None, type=int, help='Data Axis if single variable treatment')
     parser.add_argument('--gpu', type=int, default=0,
                         help='The gpu no. used for training and inference (defaults to 0)')
@@ -61,7 +61,13 @@ if __name__ == '__main__':
 
     print('Loading data... ', end='')
     if args.dataset == 'PAMAP2':
-        train_data, train_labels, train_embeddings, test_data, test_labels, test_embeddings, label_embeddings = datautils.load_PAMAP2()
+        fold_path = args.objective + '/' + str(args.fold)
+        if args.fold == 0:
+            fold_path=None
+        train_data, train_labels, train_embeddings,\
+            test_data, test_labels, test_embeddings,\
+            label_embeddings \
+            = datautils.load_PAMAP2(fold_path, args.axisk)
     else:
         raise ValueError(f"Unknown loader {args.loader}.")
     print('done')
