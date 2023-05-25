@@ -5,6 +5,7 @@ import time
 import torch
 
 from model import encoder
+import pickle
 
 import datautils
 from utils import init_dl_program, name_with_datetime
@@ -88,7 +89,7 @@ if __name__ == '__main__':
         unit = 'epoch' if args.epochs is not None else 'iter'
         config[f'after_{unit}_callback'] = save_checkpoint_callback(args.save_every, unit)
 
-    run_dir = 'training/' + args.dataset + '__' + name_with_datetime(args.run_name)
+    run_dir = 'training/' + args.dataset + '__' + name_with_datetime(args.run_name) + fold_path
     os.makedirs(run_dir, exist_ok=True)
 
     t = time.time()
@@ -107,7 +108,7 @@ if __name__ == '__main__':
         verbose=True
     )
 
-    # model.save(f'{run_dir}/model.pkl')
+    model.save(f'{run_dir}/model.pkl')
 
     t = time.time() - t
     print(f"\nTraining time: {datetime.timedelta(seconds=t)}\n")
@@ -115,11 +116,19 @@ if __name__ == '__main__':
     if args.eval:
         model.eval()
         preds = np.array(model.predict(train_data))
-        correct = np.sum(preds == train_labels)
-        print('Train Accuracy : ', correct / preds.shape[0])
+        train_acc = np.sum(preds == train_labels)/ preds.shape[0]
+        print('Train Accuracy : ', train_acc )
 
         preds = np.array(model.predict(test_data))
-        correct = np.sum(preds == test_labels)
-        print('Test Accuracy : ', correct/preds.shape[0])
+        test_acc = np.sum(preds == test_labels)/ preds.shape[0]
+        print('Test Accuracy : ', test_acc)
+
+        results = dict()
+        results['loss'] = loss_log
+        results['train_acc']= train_acc
+        results['test_acc'] = test_acc
+        with open(f'{run_dir}/results.pkl', 'wb') as handle:
+            pickle.dump(results, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 
     print("Finished.")
