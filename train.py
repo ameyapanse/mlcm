@@ -89,6 +89,8 @@ if __name__ == '__main__':
         unit = 'epoch' if args.epochs is not None else 'iter'
         config[f'after_{unit}_callback'] = save_checkpoint_callback(args.save_every, unit)
 
+    if not fold_path:
+        fold_path='/fold0'
     run_dir = 'training/' + args.dataset + '__' + name_with_datetime(args.run_name) + fold_path
     os.makedirs(run_dir, exist_ok=True)
 
