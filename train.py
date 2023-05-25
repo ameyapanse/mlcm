@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     print('Loading data... ', end='')
     if args.dataset == 'PAMAP2':
-        fold_path = args.objective + '/' + str(args.fold)
+        fold_path = args.objective + '/fold' + str(args.fold)
         if args.fold == 0:
             fold_path=None
         train_data, train_labels, train_embeddings,\
