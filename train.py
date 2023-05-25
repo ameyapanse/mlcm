@@ -67,7 +67,7 @@ if __name__ == '__main__':
         train_data, train_labels, train_embeddings,\
             test_data, test_labels, test_embeddings,\
             label_embeddings \
-            = datautils.load_PAMAP2(fold_path, args.axisk)
+            = datautils.load_PAMAP2(fold_path, args.axis)
     else:
         raise ValueError(f"Unknown loader {args.loader}.")
     print('done')
