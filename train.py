@@ -108,8 +108,8 @@ if __name__ == '__main__':
         verbose=True
     )
 
-    model.save(f'{run_dir}/model.pkl')
-
+    #model.save(f'{run_dir}/model.pkl')
+    torch.save(model.state_dict(), f'{run_dir}/model.pkl')
     t = time.time() - t
     print(f"\nTraining time: {datetime.timedelta(seconds=t)}\n")
 
