@@ -126,7 +126,7 @@ if __name__ == '__main__':
         print('Test Accuracy : ', test_acc)
 
         results = dict()
-        results['arguments'] = args
+        results['arguments'] = vars(args)
         results['loss'] = loss_log
         results['train_acc']= train_acc
         results['test_acc'] = test_acc
